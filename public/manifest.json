@@ -1,0 +1,40 @@
+{
+  "name": "Pro Realtor - Complete Real Estate Business Management",
+  "short_name": "Pro Realtor",
+  "description": "Pro Realtor - Complete real estate business management platform with CRM, property management, document handling, and communication tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["business", "productivity", "finance"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon",
+      "purpose": "any"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "protocol_handlers": [
+    {
+      "protocol": "mailto",
+      "url": "/dashboard/communications/email?to=%s"
+    },
+    {
+      "protocol": "tel",
+      "url": "/dashboard/communications/call?number=%s"
+    }
+  ]
+}

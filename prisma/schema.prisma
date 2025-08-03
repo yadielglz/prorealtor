@@ -1,0 +1,664 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Users & Authentication
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  emailVerified     DateTime?
+  firstName         String
+  lastName          String
+  phone             String?
+  avatarUrl         String?
+  role              UserRole  @default(REALTOR)
+  licenseNumber     String?
+  brokerage         String?
+  isActive          Boolean   @default(true)
+  lastLoginAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Authentication
+  accounts          Account[]
+  sessions          Session[]
+  refreshTokens     RefreshToken[]
+
+  // Business relationships
+  contacts          Contact[]
+  properties        Property[]
+  documents         Document[]
+  communications    Communication[]
+  tasks             Task[]
+  transactions      Transaction[]
+  activityLogs      ActivityLog[]
+  emailCampaigns    EmailCampaign[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Contacts & CRM
+model Contact {
+  id                String            @id @default(cuid())
+  userId            String
+  type              ContactType
+  status            ContactStatus     @default(ACTIVE)
+  source            String?
+  firstName         String
+  lastName          String
+  email             String?
+  phone             String?
+  secondaryPhone    String?
+  address           String?
+  city              String?
+  state             String?
+  zipCode           String?
+  dateOfBirth       DateTime?
+  occupation        String?
+  employer          String?
+  annualIncome      Decimal?
+  notes             String?
+  tags              String[]
+  leadScore         Int               @default(0)
+  lastContactDate   DateTime?
+  nextFollowUpDate  DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preferences       ContactPreference?
+  showings          PropertyShowing[]
+  communications    Communication[]
+  documents         Document[]
+  tasks             Task[]
+  buyerTransactions Transaction[]     @relation("BuyerTransactions")
+  sellerTransactions Transaction[]    @relation("SellerTransactions")
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([email])
+  @@index([phone])
+  @@index([lastContactDate])
+  @@map("contacts")
+}
+
+model ContactPreference {
+  id                    String   @id @default(cuid())
+  contactId             String   @unique
+  propertyTypes         String[]
+  minPrice              Decimal?
+  maxPrice              Decimal?
+  minBedrooms           Int?
+  maxBedrooms           Int?
+  minBathrooms          Decimal?
+  maxBathrooms          Decimal?
+  preferredAreas        String[]
+  mustHaveFeatures      String[]
+  niceToHaveFeatures    String[]
+  timeline              String?
+  financingType         String?
+  preApproved           Boolean  @default(false)
+  preApprovalAmount     Decimal?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@map("contact_preferences")
+}
+
+// Properties & Listings
+model Property {
+  id                  String            @id @default(cuid())
+  userId              String
+  mlsNumber           String?           @unique
+  status              PropertyStatus    @default(ACTIVE)
+  propertyType        PropertyType
+  listingType         ListingType
+  address             String
+  city                String
+  state               String
+  zipCode             String
+  county              String?
+  latitude            Decimal?
+  longitude           Decimal?
+  price               Decimal
+  originalPrice       Decimal?
+  pricePerSqft        Decimal?
+  bedrooms            Int?
+  bathrooms           Decimal?
+  halfBaths           Int?
+  squareFeet          Int?
+  lotSize             Decimal?
+  yearBuilt           Int?
+  garageSpaces        Int?
+  parkingSpaces       Int?
+  stories             Int?
+  basement            Boolean           @default(false)
+  pool                Boolean           @default(false)
+  fireplace           Boolean           @default(false)
+  centralAir          Boolean           @default(false)
+  heatingType         String?
+  coolingType         String?
+  flooringTypes       String[]
+  appliancesIncluded  String[]
+  features            String[]
+  description         String?
+  publicRemarks       String?
+  privateRemarks      String?
+  showingInstructions String?
+  listDate            DateTime?
+  expirationDate      DateTime?
+  daysOnMarket        Int?
+  virtualTourUrl      String?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images         PropertyImage[]
+  showings       PropertyShowing[]
+  documents      Document[]
+  transactions   Transaction[]
+  communications Communication[]
+  tasks          Task[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([mlsNumber])
+  @@index([city, state, zipCode])
+  @@index([price])
+  @@index([propertyType])
+  @@map("properties")
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  propertyId String
+  url        String
+  caption    String?
+  isPrimary  Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_images")
+}
+
+model PropertyShowing {
+  id             String        @id @default(cuid())
+  propertyId     String
+  contactId      String
+  userId         String
+  scheduledDate  DateTime
+  durationMinutes Int          @default(30)
+  status         ShowingStatus @default(SCHEDULED)
+  feedback       String?
+  interestLevel  Int?
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  contact  Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@map("property_showings")
+}
+
+// Documents & Files
+model DocumentTemplate {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  category  String
+  fileUrl   String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  documents Document[]
+
+  @@map("document_templates")
+}
+
+model Document {
+  id               String              @id @default(cuid())
+  userId           String
+  templateId       String?
+  contactId        String?
+  propertyId       String?
+  transactionId    String?
+  name             String
+  category         String
+  fileUrl          String
+  fileSize         Int?
+  mimeType         String?
+  status           DocumentStatus      @default(DRAFT)
+  docusignEnvelopeId String?
+  signatureRequired Boolean            @default(false)
+  signedDate       DateTime?
+  expirationDate   DateTime?
+  notes            String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template     DocumentTemplate?    @relation(fields: [templateId], references: [id])
+  contact      Contact?             @relation(fields: [contactId], references: [id])
+  property     Property?            @relation(fields: [propertyId], references: [id])
+  transaction  Transaction?         @relation(fields: [transactionId], references: [id])
+  signatures   DocumentSignature[]
+
+  @@index([userId])
+  @@index([contactId])
+  @@index([propertyId])
+  @@index([status])
+  @@map("documents")
+}
+
+model DocumentSignature {
+  id              String          @id @default(cuid())
+  documentId      String
+  signerContactId String?
+  signerEmail     String
+  signerName      String
+  signatureStatus SignatureStatus @default(PENDING)
+  signedDate      DateTime?
+  ipAddress       String?
+  createdAt       DateTime        @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@map("document_signatures")
+}
+
+// Communications
+model Communication {
+  id            String            @id @default(cuid())
+  userId        String
+  contactId     String?
+  propertyId    String?
+  type          CommunicationType
+  direction     CommunicationDirection?
+  subject       String?
+  content       String?
+  durationSeconds Int?
+  phoneNumber   String?
+  emailAddress  String?
+  status        CommunicationStatus?
+  scheduledDate DateTime?
+  completedDate DateTime?
+  recordingUrl  String?
+  attachments   String[]
+  tags          String[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contact  Contact?  @relation(fields: [contactId], references: [id])
+  property Property? @relation(fields: [propertyId], references: [id])
+
+  @@index([userId])
+  @@index([contactId])
+  @@index([type])
+  @@index([completedDate])
+  @@map("communications")
+}
+
+model EmailCampaign {
+  id             String   @id @default(cuid())
+  userId         String
+  name           String
+  subject        String
+  content        String
+  templateId     String?
+  status         CampaignStatus @default(DRAFT)
+  scheduledDate  DateTime?
+  sentDate       DateTime?
+  recipientCount Int      @default(0)
+  openedCount    Int      @default(0)
+  clickedCount   Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipients CampaignRecipient[]
+
+  @@map("email_campaigns")
+}
+
+model CampaignRecipient {
+  id         String                @id @default(cuid())
+  campaignId String
+  contactId  String
+  status     CampaignRecipientStatus @default(PENDING)
+  sentDate   DateTime?
+  openedDate DateTime?
+  clickedDate DateTime?
+
+  campaign EmailCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@map("campaign_recipients")
+}
+
+// Tasks & Activities
+model Task {
+  id                String     @id @default(cuid())
+  userId            String
+  contactId         String?
+  propertyId        String?
+  transactionId     String?
+  title             String
+  description       String?
+  type              TaskType?
+  priority          TaskPriority @default(MEDIUM)
+  status            TaskStatus @default(PENDING)
+  dueDate           DateTime?
+  completedDate     DateTime?
+  reminderDate      DateTime?
+  estimatedDuration Int?
+  actualDuration    Int?
+  notes             String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contact     Contact?     @relation(fields: [contactId], references: [id])
+  property    Property?    @relation(fields: [propertyId], references: [id])
+  transaction Transaction? @relation(fields: [transactionId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([contactId])
+  @@map("tasks")
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  userId      String
+  entityType  String
+  entityId    String
+  action      String
+  description String?
+  oldValues   Json?
+  newValues   Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+// Transactions & Deals
+model Transaction {
+  id                String            @id @default(cuid())
+  userId            String
+  propertyId        String
+  buyerContactId    String?
+  sellerContactId   String?
+  transactionType   TransactionType
+  status            TransactionStatus @default(ACTIVE)
+  contractDate      DateTime?
+  closingDate       DateTime?
+  possessionDate    DateTime?
+  purchasePrice     Decimal?
+  commissionRate    Decimal?
+  commissionAmount  Decimal?
+  commissionSplit   Decimal?
+  netCommission     Decimal?
+  earnestMoney      Decimal?
+  downPayment       Decimal?
+  loanAmount        Decimal?
+  loanType          String?
+  lender            String?
+  titleCompany      String?
+  inspector         String?
+  appraiser         String?
+  notes             String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property       Property               @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  buyerContact   Contact?               @relation("BuyerTransactions", fields: [buyerContactId], references: [id])
+  sellerContact  Contact?               @relation("SellerTransactions", fields: [sellerContactId], references: [id])
+  milestones     TransactionMilestone[]
+  documents      Document[]
+  tasks          Task[]
+
+  @@index([userId])
+  @@index([propertyId])
+  @@index([status])
+  @@index([closingDate])
+  @@map("transactions")
+}
+
+model TransactionMilestone {
+  id            String    @id @default(cuid())
+  transactionId String
+  name          String
+  description   String?
+  dueDate       DateTime?
+  completedDate DateTime?
+  status        MilestoneStatus @default(PENDING)
+  isCritical    Boolean   @default(false)
+  sortOrder     Int       @default(0)
+  createdAt     DateTime  @default(now())
+
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@map("transaction_milestones")
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  REALTOR
+  ASSISTANT
+  CLIENT
+}
+
+enum ContactType {
+  LEAD
+  BUYER
+  SELLER
+  VENDOR
+  REFERRAL
+}
+
+enum ContactStatus {
+  ACTIVE
+  INACTIVE
+  CONVERTED
+  LOST
+}
+
+enum PropertyType {
+  SINGLE_FAMILY
+  CONDO
+  TOWNHOUSE
+  MULTI_FAMILY
+  LAND
+  COMMERCIAL
+}
+
+enum PropertyStatus {
+  ACTIVE
+  PENDING
+  SOLD
+  WITHDRAWN
+  EXPIRED
+}
+
+enum ListingType {
+  SALE
+  RENT
+  LEASE
+}
+
+enum ShowingStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum DocumentStatus {
+  DRAFT
+  PENDING_SIGNATURE
+  SIGNED
+  COMPLETED
+  EXPIRED
+}
+
+enum SignatureStatus {
+  PENDING
+  SIGNED
+  DECLINED
+}
+
+enum CommunicationType {
+  CALL
+  EMAIL
+  SMS
+  MEETING
+  NOTE
+}
+
+enum CommunicationDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum CommunicationStatus {
+  COMPLETED
+  MISSED
+  VOICEMAIL
+  SENT
+  DELIVERED
+  FAILED
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENT
+  COMPLETED
+}
+
+enum CampaignRecipientStatus {
+  PENDING
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+}
+
+enum TaskType {
+  CALL
+  EMAIL
+  MEETING
+  DOCUMENT
+  SHOWING
+  FOLLOW_UP
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionType {
+  PURCHASE
+  SALE
+  LEASE
+}
+
+enum TransactionStatus {
+  ACTIVE
+  PENDING
+  CLOSED
+  CANCELLED
+}
+
+enum MilestoneStatus {
+  PENDING
+  COMPLETED
+  OVERDUE
+}

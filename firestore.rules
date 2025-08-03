@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function hasRole(role) {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+    
+    function isAdmin() {
+      return hasRole('ADMIN');
+    }
+    
+    function isRealtor() {
+      return hasRole('REALTOR') || isAdmin();
+    }
+    
+    function isAssistant() {
+      return hasRole('ASSISTANT') || isRealtor();
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated();
+    }
+    
+    // Contacts collection
+    match /contacts/{contactId} {
+      allow read, write: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isRealtor();
+    }
+    
+    // Properties collection
+    match /properties/{propertyId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isRealtor();
+    }
+    
+    // Documents collection
+    match /documents/{documentId} {
+      allow read: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || 
+         resource.data.sharedWith[request.auth.uid] != null ||
+         isAdmin());
+      allow write: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isAssistant();
+    }
+    
+    // Communications collection
+    match /communications/{communicationId} {
+      allow read, write: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isAssistant();
+    }
+    
+    // Tasks collection
+    match /tasks/{taskId} {
+      allow read, write: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isAssistant();
+    }
+    
+    // Transactions collection
+    match /transactions/{transactionId} {
+      allow read, write: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isRealtor();
+    }
+    
+    // Activity logs collection (read-only for users, write for system)
+    match /activityLogs/{logId} {
+      allow read: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || isAdmin());
+      allow write: if false; // Only system can write
+    }
+    
+    // Email campaigns collection
+    match /emailCampaigns/{campaignId} {
+      allow read, write: if isAuthenticated() && 
+        (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isRealtor();
+    }
+    
+    // System settings (admin only)
+    match /settings/{settingId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Public data (read-only)
+    match /public/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

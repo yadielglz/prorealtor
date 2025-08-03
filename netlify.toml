@@ -1,0 +1,29 @@
+[build]
+  publish = ".next"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  NEXT_PUBLIC_APP_URL = "https://prorealtor.netlify.app"
+  NEXT_PUBLIC_ENABLE_PWA = "true"
+  NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+
+[context.deploy-preview.environment]
+  NEXT_PUBLIC_APP_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
+  NEXT_PUBLIC_ENABLE_PWA = "true"
+  NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+
+[context.branch-deploy.environment]
+  NEXT_PUBLIC_APP_URL = "https://$BRANCH--prorealtor.netlify.app"
+  NEXT_PUBLIC_ENABLE_PWA = "true"
+  NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
