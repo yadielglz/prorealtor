@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && npm run export"
+  command = "npm ci && npm run build && npm run export"
   publish = "out"
 
 [build.environment]
@@ -10,23 +10,46 @@
   NEXT_PUBLIC_APP_URL = "https://prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
-  # Add placeholder environment variables - these need to be set in Netlify UI
-  DATABASE_URL = "placeholder"
-  NEXTAUTH_SECRET = "placeholder"
+  # Firebase Configuration
+  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID = "realtypro-e56af"
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "833307029318"
+  NEXT_PUBLIC_FIREBASE_APP_ID = "1:833307029318:web:7755479541ff91584eff47"
+  # Database and Auth
+  DATABASE_URL = "postgresql://placeholder:placeholder@localhost:5432/placeholder"
+  NEXTAUTH_SECRET = "build-placeholder-secret-key-32-chars-long"
   NEXTAUTH_URL = "https://prorealtor.netlify.app"
 
 [context.deploy-preview.environment]
   NEXT_PUBLIC_APP_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
-  DATABASE_URL = "placeholder"
-  NEXTAUTH_SECRET = "placeholder"
+  # Firebase Configuration
+  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID = "realtypro-e56af"
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "833307029318"
+  NEXT_PUBLIC_FIREBASE_APP_ID = "1:833307029318:web:7755479541ff91584eff47"
+  # Database and Auth
+  DATABASE_URL = "postgresql://placeholder:placeholder@localhost:5432/placeholder"
+  NEXTAUTH_SECRET = "build-placeholder-secret-key-32-chars-long"
   NEXTAUTH_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
 
 [context.branch-deploy.environment]
   NEXT_PUBLIC_APP_URL = "https://$BRANCH--prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
-  DATABASE_URL = "placeholder"
-  NEXTAUTH_SECRET = "placeholder"
+  # Firebase Configuration
+  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID = "realtypro-e56af"
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "833307029318"
+  NEXT_PUBLIC_FIREBASE_APP_ID = "1:833307029318:web:7755479541ff91584eff47"
+  # Database and Auth
+  DATABASE_URL = "postgresql://placeholder:placeholder@localhost:5432/placeholder"
+  NEXTAUTH_SECRET = "build-placeholder-secret-key-32-chars-long"
   NEXTAUTH_URL = "https://$BRANCH--prorealtor.netlify.app"
