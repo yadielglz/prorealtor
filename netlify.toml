@@ -17,10 +17,14 @@
   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "833307029318"
   NEXT_PUBLIC_FIREBASE_APP_ID = "1:833307029318:web:7755479541ff91584eff47"
+  # Firebase Server-side
+  FIREBASE_PROJECT_ID = "realtypro-e56af"
   # Database and Auth
   DATABASE_URL = "postgresql://placeholder:placeholder@localhost:5432/placeholder"
   NEXTAUTH_SECRET = "build-placeholder-secret-key-32-chars-long"
   NEXTAUTH_URL = "https://prorealtor.netlify.app"
+  # Security
+  JWT_SECRET = "build-jwt-secret-key-for-production-32-chars-long-placeholder"
 
 [context.deploy-preview.environment]
   NEXT_PUBLIC_APP_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
@@ -33,10 +37,14 @@
   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "833307029318"
   NEXT_PUBLIC_FIREBASE_APP_ID = "1:833307029318:web:7755479541ff91584eff47"
+  # Firebase Server-side
+  FIREBASE_PROJECT_ID = "realtypro-e56af"
   # Database and Auth
   DATABASE_URL = "postgresql://placeholder:placeholder@localhost:5432/placeholder"
   NEXTAUTH_SECRET = "build-placeholder-secret-key-32-chars-long"
   NEXTAUTH_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
+  # Security
+  JWT_SECRET = "build-jwt-secret-key-for-production-32-chars-long-placeholder"
 
 [context.branch-deploy.environment]
   NEXT_PUBLIC_APP_URL = "https://$BRANCH--prorealtor.netlify.app"
@@ -49,7 +57,11 @@
   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "833307029318"
   NEXT_PUBLIC_FIREBASE_APP_ID = "1:833307029318:web:7755479541ff91584eff47"
+  # Firebase Server-side
+  FIREBASE_PROJECT_ID = "realtypro-e56af"
   # Database and Auth
   DATABASE_URL = "postgresql://placeholder:placeholder@localhost:5432/placeholder"
   NEXTAUTH_SECRET = "build-placeholder-secret-key-32-chars-long"
   NEXTAUTH_URL = "https://$BRANCH--prorealtor.netlify.app"
+  # Security
+  JWT_SECRET = "build-jwt-secret-key-for-production-32-chars-long-placeholder"
