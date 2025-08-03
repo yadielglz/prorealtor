@@ -1,29 +1,34 @@
 [build]
-  publish = ".next"
   command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
+  NPM_FLAGS = "--version"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 
 [context.production.environment]
   NEXT_PUBLIC_APP_URL = "https://prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+  # Add placeholder environment variables - these need to be set in Netlify UI
+  DATABASE_URL = "placeholder"
+  NEXTAUTH_SECRET = "placeholder"
+  NEXTAUTH_URL = "https://prorealtor.netlify.app"
 
 [context.deploy-preview.environment]
   NEXT_PUBLIC_APP_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+  DATABASE_URL = "placeholder"
+  NEXTAUTH_SECRET = "placeholder"
+  NEXTAUTH_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
 
 [context.branch-deploy.environment]
   NEXT_PUBLIC_APP_URL = "https://$BRANCH--prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+  DATABASE_URL = "placeholder"
+  NEXTAUTH_SECRET = "placeholder"
+  NEXTAUTH_URL = "https://$BRANCH--prorealtor.netlify.app"
