@@ -99,6 +99,7 @@ const nextConfig = {
     serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs']
   },
   images: {
+    unoptimized: true, // Disable image optimization for Netlify
     remotePatterns: [
       {
         protocol: 'https',
@@ -115,19 +116,14 @@ const nextConfig = {
     ],
     formats: ['image/webp', 'image/avif']
   },
+  output: 'export', // Enable static export for Netlify
+  trailingSlash: true, // Add trailing slashes for static export
+  skipTrailingSlashRedirect: true,
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: securityHeaders
-      }
-    ];
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/trpc/:path*',
-        destination: '/api/trpc/:path*'
       }
     ];
   },
