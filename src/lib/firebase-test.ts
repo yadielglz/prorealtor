@@ -55,22 +55,16 @@ export function connectToEmulators() {
   if (process.env.NODE_ENV === 'development') {
     try {
       // Connect to Auth emulator
-      if (!auth.config.emulator) {
-        connectAuthEmulator(auth, 'http://localhost:9099')
-        console.log('🔧 Connected to Auth emulator')
-      }
+      connectAuthEmulator(auth, 'http://localhost:9099')
+      console.log('🔧 Connected to Auth emulator')
       
       // Connect to Firestore emulator
-      if (!db._delegate._databaseId.database.includes('emulator')) {
-        connectFirestoreEmulator(db, 'localhost', 8080)
-        console.log('🔧 Connected to Firestore emulator')
-      }
+      connectFirestoreEmulator(db, 'localhost', 8080)
+      console.log('🔧 Connected to Firestore emulator')
       
       // Connect to Storage emulator
-      if (!storage._delegate._host.includes('localhost')) {
-        connectStorageEmulator(storage, 'localhost', 9199)
-        console.log('🔧 Connected to Storage emulator')
-      }
+      connectStorageEmulator(storage, 'localhost', 9199)
+      console.log('🔧 Connected to Storage emulator')
     } catch (error) {
       console.warn('⚠️ Could not connect to emulators:', error)
     }
