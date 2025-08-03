@@ -10,8 +10,8 @@
   NEXT_PUBLIC_APP_URL = "https://prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
-  # Firebase Configuration
-  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  # Firebase Configuration - Real values
+  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyA7Nms93vSHnmF94dYqH1nbmG2mUphUlXg"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
   NEXT_PUBLIC_FIREBASE_PROJECT_ID = "realtypro-e56af"
   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
@@ -26,8 +26,8 @@
   NEXT_PUBLIC_APP_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
-  # Firebase Configuration
-  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  # Firebase Configuration - Real values
+  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyA7Nms93vSHnmF94dYqH1nbmG2mUphUlXg"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
   NEXT_PUBLIC_FIREBASE_PROJECT_ID = "realtypro-e56af"
   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
@@ -42,8 +42,8 @@
   NEXT_PUBLIC_APP_URL = "https://$BRANCH--prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
-  # Firebase Configuration
-  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  # Firebase Configuration - Real values
+  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyA7Nms93vSHnmF94dYqH1nbmG2mUphUlXg"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
   NEXT_PUBLIC_FIREBASE_PROJECT_ID = "realtypro-e56af"
   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "realtypro-e56af.firebasestorage.app"
