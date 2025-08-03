@@ -12,9 +12,9 @@ interface TestResult {
     storage: boolean
   }
   config?: {
-    projectId: string
-    authDomain: string
-    storageBucket: string
+    projectId: string | undefined
+    authDomain: string | undefined
+    storageBucket: string | undefined
   }
   error?: string
 }
