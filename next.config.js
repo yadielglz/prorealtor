@@ -95,11 +95,8 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs']
-  },
   images: {
-    unoptimized: true, // Disable image optimization for Netlify
+    unoptimized: true, // Disable image optimization for Netlify static export
     remotePatterns: [
       {
         protocol: 'https',
@@ -119,14 +116,7 @@ const nextConfig = {
   output: 'export', // Enable static export for Netlify
   trailingSlash: true, // Add trailing slashes for static export
   skipTrailingSlashRedirect: true,
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: securityHeaders
-      }
-    ];
-  },
+  // Remove async headers() - not compatible with static export
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
