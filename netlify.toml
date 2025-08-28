@@ -5,11 +5,13 @@
 [build.environment]
   NODE_VERSION = "18"
   NPM_FLAGS = "--version"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 [context.production.environment]
   NEXT_PUBLIC_APP_URL = "https://prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
   # Firebase Configuration - Real values
   NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyA7Nms93vSHnmF94dYqH1nbmG2mUphUlXg"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
@@ -30,6 +32,7 @@
   NEXT_PUBLIC_APP_URL = "https://deploy-preview-$DEPLOY_ID--prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
   # Firebase Configuration - Real values
   NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyA7Nms93vSHnmF94dYqH1nbmG2mUphUlXg"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
@@ -50,6 +53,7 @@
   NEXT_PUBLIC_APP_URL = "https://$BRANCH--prorealtor.netlify.app"
   NEXT_PUBLIC_ENABLE_PWA = "true"
   NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
   # Firebase Configuration - Real values
   NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyA7Nms93vSHnmF94dYqH1nbmG2mUphUlXg"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "realtypro-e56af.firebaseapp.com"
