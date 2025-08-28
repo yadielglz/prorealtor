@@ -95,6 +95,9 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs']
+  },
   images: {
     unoptimized: true, // Disable image optimization for Netlify static export
     remotePatterns: [
@@ -113,10 +116,17 @@ const nextConfig = {
     ],
     formats: ['image/webp', 'image/avif']
   },
-  output: 'export', // Enable static export for Netlify
-  trailingSlash: true, // Add trailing slashes for static export
-  skipTrailingSlashRedirect: true,
-  // Remove async headers() - not compatible with static export
+  // output: 'export', // Removed - using regular Next.js deployment instead
+  // trailingSlash: true, // Not needed for regular deployment
+  // skipTrailingSlashRedirect: true, // Not needed for regular deployment
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: securityHeaders
+      }
+    ];
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
